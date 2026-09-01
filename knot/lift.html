@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>从投影图还原纽结 · Knot from a Plane Curve</title>
+<link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <h1>从投影图还原纽结</h1>
+    <nav class="steps">
+      <button class="step on" data-mode="move">① 移动</button>
+      <span class="arw">→</span>
+      <button class="step" data-mode="choose">② 定上下</button>
+      <span class="arw">→</span>
+      <button class="step" data-mode="lift">③ 还原</button>
+    </nav>
+    <span class="sep"></span>
+    <a class="navlink" href="index.html">同痕演示 →</a>
+    <button id="btnHelp" class="ghost">?</button>
+  </header>
+
+  <div id="tools">
+    <div class="toolset" id="toolMove">
+      <button id="btnCircle" title="回到一个圆 —— 一个平凡结">重画圆</button>
+      <button id="btnTangle" title="做一串随机的拉动">打乱</button>
+      <button id="btnSmooth" title="把折角抹平（平面上没有拓扑要守）">抚平</button>
+      <button id="btnUndo" title="撤销上一次拉动">撤销</button>
+      <label class="ctl">拉动半径
+        <input id="rngPull" type="range" min="2" max="24" step="1" value="8">
+        <span id="lblPull" class="mono">8</span>
+      </label>
+      <label class="ctl">顶点
+        <input id="npts" type="number" min="48" max="200" step="4" value="96">
+      </label>
+      <span class="tip">抓住曲线拖动即可。此时还没有「上下」—— 交叉点可以随便生、随便灭。</span>
+    </div>
+
+    <div class="toolset" id="toolChoose" hidden>
+      <button id="btnDesc" title="沿曲线走，每个交叉点第一次经过时判为上股 —— 结果必然是平凡结">下降 → 平凡结</button>
+      <button id="btnAlt" title="沿曲线走，上、下、上、下…交替。约化掉扭结之后若还剩 n′≥3 个交叉点，它的交叉数恰好是 n′">交替图解</button>
+      <button id="btnRand">随机</button>
+      <button id="btnFlip" title="所有交叉点同时翻转">全反（镜像）</button>
+      <span class="tip">点击图上的交叉点翻转它的上下。</span>
+    </div>
+
+    <div class="toolset" id="toolLift" hidden>
+      <button id="btnInflate" title="平滑 + 排斥，每一步都受 Δ-move 约束">充气松弛</button>
+      <button id="btnSimplify" title="只收缩拉直（平凡结会自己解开）">自动简化</button>
+      <button id="btnResetCam">正视</button>
+      <button id="btnHandoff" title="把还原出的三维纽结送到同痕演示里继续玩">送进同痕演示 →</button>
+      <span class="tip">拖动旋转视角 · 滚轮缩放 · <kbd>Ctrl</kbd>+拖动平移</span>
+    </div>
+  </div>
+
+  <main>
+    <section id="stage">
+      <canvas id="cmain"></canvas>
+      <div id="hud"><div class="hint" id="hint"></div></div>
+    </section>
+
+    <aside>
+      <div class="panel">
+        <h2>当前图解</h2>
+        <div class="grid">
+          <div><span class="k">交叉点数</span><span class="v" id="vCross">–</span></div>
+          <div><span class="k">拧数 w</span><span class="v" id="vWrithe">–</span></div>
+          <div><span class="k">行列式</span><span class="v" id="vDet">–</span></div>
+          <div><span class="k">控制点</span><span class="v" id="vN">–</span></div>
+        </div>
+        <div class="row"><span class="k">Alexander Δ(t)</span><span class="v mono" id="vAlex">–</span></div>
+        <div class="row"><span class="k">识别</span><span class="v" id="vName">–</span></div>
+        <div class="row"><span class="k" title="把提升出来的空间折线重新投影，核对交叉点个数与每个交叉点的上下">还原自检</span><span class="v" id="vCheck">–</span></div>
+        <div class="row gauss"><span class="k">Gauss code</span><span class="v mono" id="vGauss">–</span></div>
+        <div id="warn" class="warn"></div>
+      </div>
+
+      <div class="panel" id="panelEnum">
+        <h2>2ⁿ 种选法
+          <span class="counts"><b id="enumState">–</b></span>
+        </h2>
+        <div class="row" style="border:none;margin:0;padding:0">
+          <button id="btnEnum">按 Δ(t) 全部枚举</button>
+          <button id="btnEnumStop" hidden>停止</button>
+        </div>
+        <ul id="enumList"><li class="empty">交叉点不多于 12 个时可以把 2ⁿ 种上下选法全试一遍。</li></ul>
+      </div>
+
+      <div class="panel grow" id="panelNote">
+        <h2>这一步在做什么</h2>
+        <div id="note"></div>
+      </div>
+    </aside>
+  </main>
+
+  <div id="help" class="modal" hidden>
+    <div class="sheet">
+      <h2>三个阶段</h2>
+      <p><strong>① 移动。</strong>这时候根本没有「上下」。屏幕上只有一条平面闭曲线，交叉点只是画面上两股的重叠点，
+        没有任何附加数据 —— 纽结论里管这个叫 <em>shadow</em>（影子）。你拖控制点，交叉点自由地生出来、消失、
+        互相穿过，程序不拦你，因为此刻还不存在纽结。</p>
+      <p><strong>② 定上下。</strong>每个交叉点是一个比特。点一下交叉点就翻转它。两个批量按钮是一对两极：
+        <strong>下降</strong>（沿曲线走，每个交叉点第一次经过时判为上股）结果必然是<strong>平凡结</strong>——
+        它把你最开始画的那个圈还原了出来；<strong>交替</strong>（沿曲线走，上下交替）由 Tait 猜想
+        （Kauffman–Murasugi–Thistlethwaite 定理），约化之后若还剩 n′≥3 个交叉点，它的交叉数<strong>恰好是 n′</strong>，
+        所以必然打了结。中间的 2ⁿ 种就是你自己点出来的。</p>
+      <p>交替赋值之所以总是存在，是因为 Gauss 的可实现性条件：平面闭曲线的 Gauss 序列中，任一交叉点两次出现
+        之间必夹着<strong>偶数</strong>个事件，于是这两次出现的位置奇偶相反。</p>
+      <p><strong>③ 还原。</strong>令 <em>z(s) ≡ 0</em>，只在每个交叉点附近开一个支撑集很小的凸包：上股抬到 <em>+h</em>、
+        下股压到 <em>−h</em>，支撑区间比该事件到相邻事件的弧长间距还小，于是各凸包互不重叠。采样点只加在原折线的
+        边上，所以平面形状逐点不变；<em>(x,y)</em> 唯一可能重合的地方就是交叉点，而那里两股的 z 相差 <em>2h</em>。
+        所以得到的空间折线<strong>是嵌入的</strong>，且它的正交投影<strong>逐点等于</strong>你画的那张图 ——
+        它就是那个纽结，差一个同痕。这不是数值拟合，是精确的。</p>
+      <p>提升出来的东西几乎是平的，所以再让它自己舒展开：平滑力往中点收，排斥力把叠在一起的股撑开。
+        每一次顶点移动都过 <em>Δ-move</em> 判定，所以松弛<strong>不改变纽结型</strong> ——
+        右侧的 Δ(t) 在整个充气过程中不应该变，一旦变了就会报警。</p>
+      <h2>为什么移动阶段不需要「保上下」</h2>
+      <p>平面上的移动<strong>不是</strong>空间中的同痕。若要求边拖边保持上下，两股扫过对方时画面上一次生出两个
+        交叉点，给相同的选择才是一次合法的 R2（物理上是「把这根绳整个从另一根上面挪过去」），给相反的选择
+        就凭空造出了一个扣。这里把定上下放到移动之后，这个问题自动消失。</p>
+      <button id="helpClose">知道了</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/geom.js?v=2"></script>
+<script src="js/knot.js?v=2"></script>
+<script src="js/diagram.js?v=2"></script>
+<script src="js/alex.js?v=2"></script>
+<script src="js/render.js?v=2"></script>
+<script src="js/plane.js?v=2"></script>
+<script src="js/lift.js?v=2"></script>
+<script src="js/relax.js?v=2"></script>
+<script src="js/liftapp.js?v=2"></script>
+</body>
+</html>

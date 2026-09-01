@@ -1,0 +1,8 @@
+# 不希望本站被搜索引擎收录。
+# 想让别人能搜到你时，把下面两行改成：
+#   User-agent: *
+#   Allow: /
+# 并删掉 index.html 里那行 <meta name="robots" content="noindex, nofollow">
+
+User-agent: *
+Disallow: /

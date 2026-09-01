@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>纽结同痕可视化 · Knot Isotopy Explorer</title>
+<link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <h1>纽结同痕可视化</h1>
+    <label class="ctl">纽结
+      <select id="libSel"></select>
+    </label>
+    <label class="ctl">控制点
+      <input id="npts" type="number" min="40" max="180" step="4" value="84">
+    </label>
+    <button id="btnReset" title="重新加载当前纽结">重置</button>
+    <button id="btnTangle" title="做一串随机的安全 Δ-move">打乱</button>
+    <button id="btnSimplify" title="在保持同痕的前提下自动收缩、拉直">自动简化</button>
+    <span class="sep"></span>
+    <button id="btnExport" title="导出这条同痕为 JSON">导出</button>
+    <button id="btnImport" title="载入一条同痕">导入</button>
+    <input id="fileIn" type="file" accept="application/json" hidden>
+    <a class="navlink" href="lift.html" title="在平面上画一个平凡结、移动它、定上下，再把纽结还原出来">从投影图还原 →</a>
+    <button id="btnHelp" class="ghost">?</button>
+  </header>
+
+  <main>
+    <section id="stage">
+      <canvas id="c3d"></canvas>
+      <div id="hud">
+        <div class="hint">左键拖控制点 · <kbd>Shift</kbd>+拖动改深度 · 空白处拖动或右键转视角 · 滚轮缩放</div>
+        <div id="blocked" class="blocked">被挡住了 —— 再走就会自交</div>
+      </div>
+      <div id="badges">
+        <label><input type="checkbox" id="ckPts" checked> 控制点</label>
+        <label><input type="checkbox" id="ckAdapt" checked> 自适应重采样</label>
+        <label><input type="checkbox" id="ckViewEv" checked> 记录视角引起的移动</label>
+      </div>
+    </section>
+
+    <aside>
+      <div class="panel">
+        <h2>二维投影图解</h2>
+        <canvas id="c2d"></canvas>
+      </div>
+
+      <div class="panel" id="infoPanel">
+        <h2>当前图解</h2>
+        <div class="grid">
+          <div><span class="k">交叉点数</span><span class="v" id="vCross">–</span></div>
+          <div><span class="k">拧数 w</span><span class="v" id="vWrithe">–</span></div>
+          <div><span class="k">行列式</span><span class="v" id="vDet">–</span></div>
+          <div><span class="k">控制点</span><span class="v" id="vN">–</span></div>
+        </div>
+        <div class="row"><span class="k" title="不相邻边之间的实际最小距离，以及程序保证留出的间距 δ">最小间距 / δ</span><span class="v mono" id="vSep">–</span></div>
+        <div class="row"><span class="k">Alexander Δ(t)</span><span class="v mono" id="vAlex">–</span></div>
+        <div class="row"><span class="k">识别</span><span class="v" id="vName">–</span></div>
+        <div class="row gauss"><span class="k">Gauss code</span><span class="v mono" id="vGauss">–</span></div>
+        <div id="invWarn" class="warn"></div>
+      </div>
+
+      <div class="panel grow">
+        <h2>Reidemeister 移动
+          <span class="counts">
+            <b class="r1" id="cR1">0</b><b class="r2" id="cR2">0</b><b class="r3" id="cR3">0</b>
+          </span>
+        </h2>
+        <ul id="evList"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <button id="btnPlay">▶ 回放</button>
+    <button id="btnStepBack" title="上一步">◀|</button>
+    <button id="btnStepFwd" title="下一步">|▶</button>
+    <button id="btnPrevEv" title="上一次 R-移动">« R</button>
+    <button id="btnNextEv" title="下一次 R-移动">R »</button>
+    <input id="timeline" type="range" min="0" max="0" value="0" step="1">
+    <span id="tlLabel" class="mono">0 / 0</span>
+    <label class="ctl">速度 <select id="speed">
+      <option value="0.25">0.25×</option>
+      <option value="0.5">0.5×</option>
+      <option value="1" selected>1×</option>
+      <option value="2">2×</option>
+      <option value="4">4×</option>
+      <option value="step">逐步</option>
+    </select></label>
+  </footer>
+
+  <div id="help" class="modal" hidden>
+    <div class="sheet">
+      <h2>这个程序在做什么</h2>
+      <p>纽结被表示成空间中的<strong>闭合折线</strong>，控制点就是它的顶点。</p>
+      <p><strong>不允许自交是被证明出来的，不是被画出来的。</strong>把顶点 <em>v</em> 移到 <em>v′</em> 时，两条相邻边扫过的区域是两个三角形
+        <em>(v₋₁,v,v′)</em> 与 <em>(v₊₁,v,v′)</em>。程序检验这两个三角形与纽结其余部分无交（并保留最小间距 δ）——
+        这正是 PL 纽结论中的 <strong>Δ-move</strong>，可以延拓成环境同痕。挡住时就沿拖动方向二分，走到最远的安全位置为止。</p>
+      <p>右侧图解是同一条<strong>正交投影</strong>：你在左边看到的就是右边的图解。每一小步都会自适应二分，直到该步至多引发一次图解事件，
+        再按 Gauss 编码的组合特征判定是 <b class="r1">R1</b>、<b class="r2">R2</b> 还是 <b class="r3">R3</b>。
+        另有一类 <b class="r2">R2 ⇄</b>：双角形塌缩后立刻反向重开，等于 R2↓ 紧接 R2↑；
+        当它窄于四分之一条边长时属于分辨率以下的抖动，不予记录。</p>
+      <p>「最小间距 / δ」一栏可以实时看到不相邻边之间的真实最小距离，以及程序当前保证留出的间距。
+        紧折角处前者可以小于后者（共享顶点附近要允许邻边天然的相接），但永远不会归零。</p>
+      <p>Alexander 多项式由图解经 Fox 微积分现算（ℤ[t] 上的精确行列式）。它在整个形变过程中<strong>不应该变</strong>——这是同痕正确性的一个实时检验。</p>
+      <h2>操作</h2>
+      <ul>
+        <li>左键拖动控制点：在屏幕平面内移动；<kbd>Shift</kbd> + 拖动：沿视线方向移动。</li>
+        <li>在空白处拖动或右键拖动：旋转视角；滚轮缩放；<kbd>Ctrl</kbd>+拖动：平移。</li>
+        <li><kbd>Ctrl/⌘</kbd>+<kbd>Z</kbd>：回退一步。</li>
+        <li>时间轴可以任意拖动、逐步、按 R-移动跳转；点击右侧事件条目直接跳到那一刻。</li>
+      </ul>
+      <button id="helpClose">知道了</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/geom.js?v=2"></script>
+<script src="js/knot.js?v=2"></script>
+<script src="js/library.js?v=2"></script>
+<script src="js/diagram.js?v=2"></script>
+<script src="js/reid.js?v=2"></script>
+<script src="js/alex.js?v=2"></script>
+<script src="js/render.js?v=2"></script>
+<script src="js/recorder.js?v=2"></script>
+<script src="js/app.js?v=2"></script>
+</body>
+</html>
