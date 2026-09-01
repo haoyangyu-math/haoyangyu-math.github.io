@@ -45,9 +45,8 @@ const SITE = {
     //   ["用户名", "gmail", "com"]  →  用户名 + @ + gmail.com
     emailParts: ["yuhymath", "gmail", "com"],
 
-    // 简历做好后：PDF 放进 assets/files/，这里填 "assets/files/CV.pdf"，
-    // 首屏会自动多出一个「简历 CV」按钮。留空则按钮隐藏。
-    cv: "",
+    // 公开版学术简历；首屏的「简历 CV」按钮会在新标签页打开它。
+    cv: "assets/files/Haoyang_Yu_CV.pdf",
 
     scholar: "",
     links: []
