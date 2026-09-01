@@ -144,8 +144,8 @@ const SITE = {
       kind: { zh: "交互式可视化", en: "Interactive Visualization" },
       title: { zh: "纽结同痕可视化", en: "Knot Isotopy Explorer" },
       desc: {
-        zh: "拖动空间纽结上的任意控制点，程序用 PL 纽结论里的 <b>Δ-move</b> 判定保证形变全程不出现自交，同时实时画出对应的二维投影图解，并识别其间发生的 <b>Reidemeister 移动</b>。每一帧由 Wirtinger 表示 + Fox 微分现算 <b>Alexander 多项式</b>：它是不变量，所以不该变 —— 这是对整套同痕机制的一个持续的自我检验。",
-        en: "Drag any control point of a knot in space: a <b>Δ-move</b> test from PL knot theory keeps the deformation embedded at every instant, while the corresponding planar diagram is redrawn live and the <b>Reidemeister moves</b> along the way are identified. Each frame recomputes the <b>Alexander polynomial</b> from the Wirtinger presentation via Fox calculus — being an invariant, it must not change, which makes it a running self-check on the whole isotopy machinery."
+        zh: "拖动空间纽结上的任意控制点，程序用 PL 纽结论里的 <b>Δ-move</b> 判定保证形变全程不出现自交，同时实时画出对应的二维投影图解，并识别其间发生的 <b>Reidemeister 移动</b>。每一帧还用 Wirtinger 表示和 Fox 微分重算一次 <b>Alexander 多项式</b>，用来校验形变确实没有改变纽结型。",
+        en: "Drag any control point of a knot in space: a <b>Δ-move</b> test from PL knot theory keeps the deformation embedded at every instant, while the corresponding planar diagram is redrawn live and the <b>Reidemeister moves</b> along the way are identified. Each frame also recomputes the <b>Alexander polynomial</b> from the Wirtinger presentation via Fox calculus, as a check that the deformation has not changed the knot type."
       },
       tags: [
         { zh: "Δ-move", en: "Δ-move" },
@@ -161,13 +161,13 @@ const SITE = {
       kind: { zh: "交互式可视化", en: "Interactive Visualization" },
       title: { zh: "从投影图还原纽结", en: "Lifting a Knot from Its Diagram" },
       desc: {
-        zh: "反方向的玩法：在平面上画一个圆、把它揉乱得到一张<b>影子图</b>，再逐个交叉点选定谁上谁下，程序把对应的空间纽结<b>还原</b>出来。提升是精确的而非拟合 —— 把它投影回去逐点等于你画的那张图。之后由排斥力把这张煎饼鼓成纽结，每一步都过 Δ-move 判定，所以纽结型不变。交叉点不多于 12 个时还能把 2ⁿ 种上下选法全试一遍，按 Δ(t) 归类。",
-        en: "The other direction: draw a circle in the plane, scramble it into a <b>shadow diagram</b>, then choose which strand runs over at each crossing — and the corresponding knot in space is <b>reconstructed</b>. The lift is exact rather than fitted: projecting it back reproduces your diagram pointwise. A repulsion flow then inflates the flat curve into a knot, every step gated by the same Δ-move test, so the knot type never changes. With at most 12 crossings it will also enumerate all 2ⁿ over/under choices and sort them by Δ(t)."
+        zh: "该程序从平面纽结图解构造其三维实现。用户首先将一条平面闭曲线变形为带有横截交点的<b>影子图</b>，并为每个交叉点指定上下穿信息；程序据此构造空间中的一条嵌入折线，使其正交投影与给定图解一致。随后，程序在 Δ-move 条件的约束下对空间折线进行松弛，从而保持纽结型不变。对于交叉点不超过 12 个的影子图，程序还可遍历全部 2ⁿ 种上下穿指派，并依据 <b>Alexander 多项式</b>对所得图解进行分组。",
+        en: "This program constructs a spatial realization of a planar knot diagram. The user first deforms a closed plane curve into a <b>shadow</b> with transverse double points and then assigns over/under information at each crossing. From these data, the program constructs an embedded polygonal curve in three-space whose orthogonal projection agrees with the prescribed diagram. It then relaxes the spatial curve under a Δ-move constraint, preserving the knot type. For shadows with at most 12 crossings, the program can enumerate all 2ⁿ over/under assignments and group the resulting diagrams by their <b>Alexander polynomials</b>."
       },
       tags: [
-        { zh: "投影图与提升", en: "Diagrams & Lifting" },
-        { zh: "Gauss 编码", en: "Gauss Code" },
-        { zh: "交替赋值", en: "Alternating Diagrams" }
+        { zh: "纽结图解", en: "Knot Diagrams" },
+        { zh: "空间提升", en: "Spatial Lifting" },
+        { zh: "Alexander 多项式", en: "Alexander Polynomial" }
       ],
       links: [
         { label: { zh: "打开演示", en: "Open the demo" }, url: "knot/lift.html" }
