@@ -72,10 +72,10 @@
     if (twitterTitleMeta) twitterTitleMeta.content = t(SITE.profile.siteTitle);
     if (twitterDescriptionMeta) twitterDescriptionMeta.content = description;
     if (ogImageMeta && typeof window !== "undefined") {
-      ogImageMeta.content = new URL("public/og.png", window.location.href).href;
+      ogImageMeta.content = new URL(window.location.protocol === "file:" ? "public/og.png" : "og.png", window.location.href).href;
     }
     if (twitterImageMeta && typeof window !== "undefined") {
-      twitterImageMeta.content = new URL("public/og.png", window.location.href).href;
+      twitterImageMeta.content = new URL(window.location.protocol === "file:" ? "public/og.png" : "og.png", window.location.href).href;
     }
     $("#langLabel").textContent = lang === "zh" ? "EN" : "中";
 

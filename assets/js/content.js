@@ -37,7 +37,7 @@ const SITE = {
     avatar: "",
 
     // 头像下方的图注。换成真人照片后把这里改成空字符串，图注会自动消失。
-    avatarCaption: { zh: "图 1　三叶结 3₁（未来会被人脸替代）", en: "fig. 1 — trefoil knot 3₁ (to be replaced by a face)" },
+    avatarCaption: { zh: "图 1　三叶结 3₁", en: "fig. 1 — trefoil knot 3₁" },
 
     // 邮箱（反爬虫）：拆成三段存放，页面加载时才在浏览器里拼起来。
     // 这样源码和页面文件里都不会出现完整的 "xxx@xxx.com" 字符串，
