@@ -228,7 +228,7 @@ const SITE = {
     {
       when: { zh: "2026", en: "2026" },
       what: { zh: "国家奖学金", en: "National Scholarship" },
-      where: { zh: "", en: "" }
+      where: { zh: "北京大学（本科）", en: "Peking University (Undergraduate)" }
     },
     {
       when: { zh: "2026", en: "2026" },
