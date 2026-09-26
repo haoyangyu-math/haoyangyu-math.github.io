@@ -255,6 +255,11 @@ const SITE = {
       when: { zh: "2025", en: "2025" },
       what: { zh: "三好学生", en: "Merit Student" },
       where: { zh: "北京大学（本科）", en: "Peking University (Undergraduate)" }
+    },
+    {
+      when: { zh: "2025", en: "2025" },
+      what: { zh: "秦宛顺靳云汇奖学金", en: "Qin Wanshun–Jin Yunhui Scholarship" },
+      where: { zh: "北京大学（本科）", en: "Peking University (Undergraduate)" }
     }
   ],
 
