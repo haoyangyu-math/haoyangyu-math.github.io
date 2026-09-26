@@ -235,7 +235,7 @@
 
       var main = el("div");
       main.appendChild(el("h3", null, t(r.title)));
-      main.appendChild(el("p", null, t(r.desc)));
+      if (t(r.desc)) main.appendChild(el("p", null, t(r.desc)));
       if (r.tags && r.tags.length) {
         var tg = el("div", "tags");
         r.tags.forEach(function (x) { tg.appendChild(el("span", "tag", t(x))); });

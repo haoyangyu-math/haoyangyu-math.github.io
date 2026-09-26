@@ -91,10 +91,6 @@ const SITE = {
   research: [
     {
       title: { zh: "低维拓扑与纽结理论", en: "Low-dimensional Topology & Knot Theory" },
-      desc: {
-        zh: "关注纽结、三维流形及其拓扑不变量之间的联系，并学习低维拓扑中连接几何、拓扑与代数结构的方法。",
-        en: "I am interested in relationships among knots, 3-manifolds, and their topological invariants, and in the ways low-dimensional topology connects geometric, topological, and algebraic structures."
-      },
       tags: [
         { zh: "低维拓扑", en: "Low-dimensional Topology" },
         { zh: "纽结", en: "Knots" },
@@ -106,10 +102,6 @@ const SITE = {
         zh: "Heegaard Floer 与 Monopole Floer 同调",
         en: "Heegaard Floer & Monopole Floer Homology"
       },
-      desc: {
-        zh: "学习 Heegaard Floer 同调与 Monopole Floer 同调，以及它们在三维流形拓扑中的结构与应用。",
-        en: "I study Heegaard Floer homology and monopole Floer homology, together with their structures and applications in 3-manifold topology."
-      },
       tags: [
         { zh: "Heegaard Floer", en: "Heegaard Floer" },
         { zh: "Monopole Floer", en: "Monopole Floer" }
@@ -117,10 +109,6 @@ const SITE = {
     },
     {
       title: { zh: "映射类群与辛 Floer 理论", en: "Mapping Class Groups & Symplectic Floer Theory" },
-      desc: {
-        zh: "近期正在探索曲面微分同胚的辛 Floer 同调、Torelli 群与 Johnson filtration，以及映射环面和 Floer 理论之间的联系。",
-        en: "I am currently exploring symplectic Floer homology of surface diffeomorphisms, Torelli groups and the Johnson filtration, and connections between mapping tori and Floer theories."
-      },
       tags: [
         { zh: "映射类群", en: "Mapping Class Groups" },
         { zh: "Torelli 群", en: "Torelli Groups" },
