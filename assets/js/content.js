@@ -227,6 +227,11 @@ const SITE = {
     },
     {
       when: { zh: "2026", en: "2026" },
+      what: { zh: "国家奖学金", en: "National Scholarship" },
+      where: { zh: "", en: "" }
+    },
+    {
+      when: { zh: "2026", en: "2026" },
       what: { zh: "丘成桐大学生数学竞赛 几何与拓扑方向笔试第 8 名", en: "8th Place, Geometry & Topology Written Exam" },
       where: { zh: "丘成桐大学生数学竞赛", en: "Yau College Student Mathematics Contest" }
     },
