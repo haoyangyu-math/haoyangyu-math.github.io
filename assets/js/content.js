@@ -46,7 +46,7 @@ const SITE = {
     emailParts: ["yuhymath", "gmail", "com"],
 
     // 公开版学术简历；首屏的「简历 CV」按钮会在新标签页打开它。
-    cv: "assets/files/Haoyang_Yu_CV.pdf?v=0e48b17aa600",
+    cv: "assets/files/Haoyang_Yu_CV.pdf?v=814df09ca8cf",
 
     scholar: "",
     links: []
@@ -228,7 +228,7 @@ const SITE = {
     {
       when: { zh: "2026", en: "2026" },
       what: { zh: "国家奖学金", en: "National Scholarship" },
-      where: { zh: "北京大学（本科）", en: "Peking University (Undergraduate)" }
+      where: { zh: "北京大学", en: "Peking University" }
     },
     {
       when: { zh: "2026", en: "2026" },
@@ -254,12 +254,12 @@ const SITE = {
     {
       when: { zh: "2025", en: "2025" },
       what: { zh: "三好学生", en: "Merit Student" },
-      where: { zh: "北京大学（本科）", en: "Peking University (Undergraduate)" }
+      where: { zh: "北京大学", en: "Peking University" }
     },
     {
       when: { zh: "2025", en: "2025" },
       what: { zh: "秦宛顺靳云汇奖学金", en: "Qin Wanshun–Jin Yunhui Scholarship" },
-      where: { zh: "北京大学（本科）", en: "Peking University (Undergraduate)" }
+      where: { zh: "北京大学", en: "Peking University" }
     }
   ],
 
