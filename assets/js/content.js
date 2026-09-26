@@ -46,7 +46,7 @@ const SITE = {
     emailParts: ["yuhymath", "gmail", "com"],
 
     // 公开版学术简历；首屏的「简历 CV」按钮会在新标签页打开它。
-    cv: "assets/files/Haoyang_Yu_CV.pdf",
+    cv: "assets/files/Haoyang_Yu_CV.pdf?v=0e48b17aa600",
 
     scholar: "",
     links: []
@@ -222,8 +222,8 @@ const SITE = {
   experience: [
     {
       when: { zh: "2022", en: "2022" },
-      what: { zh: "中国数学奥林匹克 金牌", en: "Gold Medal, Chinese Mathematical Olympiad" },
-      where: { zh: "第 38 届 CMO", en: "38th CMO" }
+      what: { zh: "金牌", en: "Gold Medal" },
+      where: { zh: "第 38 届中国数学奥林匹克（CMO）", en: "38th Chinese Mathematical Olympiad (CMO)" }
     },
     {
       when: { zh: "2026", en: "2026" },
@@ -232,29 +232,29 @@ const SITE = {
     },
     {
       when: { zh: "2026", en: "2026" },
-      what: { zh: "丘成桐大学生数学竞赛 几何与拓扑方向笔试第 8 名", en: "8th Place, Geometry & Topology Written Exam" },
+      what: { zh: "几何与拓扑方向笔试第 8 名", en: "8th Place, Geometry & Topology Written Exam" },
       where: { zh: "丘成桐大学生数学竞赛", en: "Yau College Student Mathematics Contest" }
     },
     {
       when: { zh: "2025", en: "2025" },
       what: {
-        zh: "全国大学生数学竞赛 数学专业甲组北京市一等奖",
-        en: "Beijing First Prize, National College Student Mathematics Competition (Mathematics, Group A)"
+        zh: "数学专业甲组北京市一等奖",
+        en: "Beijing First Prize, Mathematics (Group A)"
       },
-      where: { zh: "", en: "" }
+      where: { zh: "全国大学生数学竞赛", en: "National College Student Mathematics Competition" }
     },
     {
       when: { zh: "2025", en: "2025" },
       what: {
-        zh: "丘成桐大学生数学竞赛 几何与拓扑方向笔试优胜奖",
-        en: "Written Exam Distinction in Geometry & Topology, Yau College Student Mathematics Contest"
+        zh: "几何与拓扑方向笔试优胜奖",
+        en: "Written Exam Distinction in Geometry & Topology"
       },
-      where: { zh: "", en: "" }
+      where: { zh: "丘成桐大学生数学竞赛", en: "Yau College Student Mathematics Contest" }
     },
     {
       when: { zh: "2025", en: "2025" },
-      what: { zh: "北京大学三好学生", en: "Merit Student of Peking University" },
-      where: { zh: "", en: "" }
+      what: { zh: "三好学生", en: "Merit Student" },
+      where: { zh: "北京大学（本科）", en: "Peking University (Undergraduate)" }
     }
   ],
 
