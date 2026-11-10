@@ -6,7 +6,7 @@
   "use strict";
 
   /* ---------- 语言 ---------- */
-  var LANG_KEY = "hp-lang", THEME_KEY = "hp-theme";
+  var LANG_KEY = "hp-lang";
   var lang = localStorage.getItem(LANG_KEY) || (navigator.language.indexOf("zh") === 0 ? "zh" : "en");
 
   // 取双语字段：t({zh,en}) → 当前语言的字符串
@@ -33,12 +33,11 @@
     { id: "research",     ui: "navResearch",     has: function () { return SITE.research.length; } },
     { id: "works",        ui: "navWorks",        has: function () { return (SITE.works || []).length; } },
     { id: "projects",     ui: "navProjects",     has: function () { return SITE.projects.length; } },
+    { id: "publications", ui: "navPublications", has: function () {
+      return SITE.publications.length || t(SITE.publicationsEmpty);
+    } },
     { id: "experience",   ui: "navExperience",   has: function () { return SITE.experience.length; } },
-    { id: "publications", ui: "navPublications", has: function () { return SITE.publications.length; } },
-    { id: "notes",        ui: "navNotes",        has: function () { return SITE.notes.length; } },
-    { id: "contact",      ui: "navContact",      has: function () {
-      return Boolean(emailAddress() || (SITE.profile.links && SITE.profile.links.length));
-    } }
+    { id: "notes",        ui: "navNotes",        has: function () { return SITE.notes.length; } }
   ];
 
   /* ---------- 邮箱反爬虫 ----------
@@ -88,15 +87,17 @@
     renderExperience();
     renderPublications();
     renderNotes();
-    renderContact();
     renderFooter();
 
     // 通用：data-ui / data-field 自动填充
     Array.prototype.forEach.call(document.querySelectorAll("[data-ui]"), function (n) {
       n.innerHTML = t(UI[n.getAttribute("data-ui")]);
     });
+    // 留空的文字（如栏目引言）连同元素一起隐藏，不留空白
     Array.prototype.forEach.call(document.querySelectorAll("[data-field]"), function (n) {
-      n.innerHTML = t(pick(n.getAttribute("data-field")));
+      var html = t(pick(n.getAttribute("data-field")));
+      n.innerHTML = html;
+      n.style.display = html ? "" : "none";
     });
 
     // 名字里的 <b> 变成渐变色
@@ -121,8 +122,8 @@
   function renderHero() {
     var p = SITE.profile;
 
-    // 首屏图形：默认是内联在 HTML 里的三叶结线描图，用 currentColor 上色，
-    // 所以能跟着深浅色主题变。一旦 profile.avatar 填了图片路径就换成那张图。
+    // 首屏照片：index.html 里已经放了 <img>，这里按 profile.avatar 设置地址，
+    // 并让 alt 跟着当前语言走。
     var holder = $("#avatarHolder");
     if (p.avatar) {
       var img = holder.querySelector("img") || document.createElement("img");
@@ -137,60 +138,20 @@
     if (p.cv) { cv.href = p.cv; cv.style.display = ""; } else { cv.style.display = "none"; }
 
     renderSocials($("#socials"), p.links);
-    renderSocials($("#socials2"), p.links);
 
+    // 邮箱直接显示在首屏的链接行里
     var addr = emailAddress();
     var mail = $("#mailLink");
-    var row = $("#mailRow");
     if (addr) {
       mail.href = "mailto:" + addr;
       mail.textContent = addr;
-      row.style.display = "";
-      setupCopy(addr);
+      mail.style.display = "";
     } else {
-      mail.removeAttribute("href");
-      mail.textContent = "";
-      row.style.display = "none";
+      mail.style.display = "none";
     }
 
     var sch = $("#scholarLink");
     if (p.scholar) { sch.href = p.scholar; sch.style.display = ""; } else { sch.style.display = "none"; }
-  }
-
-  /* 「复制邮箱」按钮：复制成功后短暂变成「已复制」 */
-  var copyTimer = null;
-  function setupCopy(addr) {
-    var btn = $("#copyBtn");
-    if (!btn) return;
-    btn.textContent = t(UI.copyEmail);
-    btn.classList.remove("done");
-
-    btn.onclick = function () {
-      function done() {
-        btn.textContent = t(UI.copied);
-        btn.classList.add("done");
-        clearTimeout(copyTimer);
-        copyTimer = setTimeout(function () {
-          btn.textContent = t(UI.copyEmail);
-          btn.classList.remove("done");
-        }, 1800);
-      }
-      function fallback() {
-        var ta = document.createElement("textarea");
-        ta.value = addr;
-        ta.setAttribute("readonly", "");
-        ta.style.cssText = "position:fixed;top:-100px;opacity:0";
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand("copy"); done(); } catch (e) { /* 复制不可用则静默忽略 */ }
-        document.body.removeChild(ta);
-      }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(addr).then(done, fallback);
-      } else {
-        fallback();
-      }
-    };
   }
 
   function renderSocials(box, links) {
@@ -246,8 +207,8 @@
     });
   }
 
-  // 项目：和研究经历同一副骨架（左栏年份 + 右栏正文），
-  // 区别只在末尾那排入口链接 —— 站内的程序在本页打开，外链另开一页。
+  // 项目：每条一行，左边标题，右边入口链接。
+  // 年份、类别、介绍、标签都是可选的，填了才显示。
   function renderWorks() {
     var g = $("#workGrid");
     if (!g) return;
@@ -255,12 +216,12 @@
     (SITE.works || []).forEach(function (w, i) {
       var c = el("article", "work reveal");
       c.style.transitionDelay = (i * 80) + "ms";
-      c.appendChild(el("div", "work-when", t(w.when)));
 
       var b = el("div", "work-body");
+      if (t(w.when)) b.appendChild(el("div", "work-when", t(w.when)));
       if (t(w.kind)) b.appendChild(el("div", "work-kind", t(w.kind)));
       b.appendChild(el("h3", null, t(w.title)));
-      b.appendChild(el("p", null, t(w.desc)));
+      if (t(w.desc)) b.appendChild(el("p", null, t(w.desc)));
 
       if (w.tags && w.tags.length) {
         var tg = el("div", "tags");
@@ -275,17 +236,19 @@
           var a = el("a", "work-link");
           a.href = l.url;
           a.appendChild(el("span", "work-link-label", t(l.label) || t(UI.openWork)));
-          a.appendChild(el("span", "work-link-action", t(UI.openWork)));
+          if (t(l.label)) a.appendChild(el("span", "work-link-action", "↗"));
           // 程序都是各自独立的页面，一律另开一页 —— 主页不会被顶掉，
           // knot/ 那一份也就可以和它的源目录保持逐字节一致，随时重新拷贝覆盖。
           a.target = "_blank";
           a.rel = "noopener";
           row.appendChild(a);
         });
-        b.appendChild(row);
+        c.appendChild(b);
+        c.appendChild(row);
+      } else {
+        c.appendChild(b);
       }
 
-      c.appendChild(b);
       g.appendChild(c);
     });
   }
@@ -293,6 +256,14 @@
   var pubFilter = "all";
 
   function renderPublications() {
+    // 还没有论文：只显示一句话，筛选和列表都隐藏
+    var empty = !SITE.publications.length;
+    $("#pubEmpty").innerHTML = empty ? t(SITE.publicationsEmpty) : "";
+    $("#pubEmpty").style.display = empty ? "" : "none";
+    $(".pub-tools").style.display = empty ? "none" : "";
+    $("#pubList").style.display = empty ? "none" : "";
+    if (empty) return;
+
     var types = ["all"].concat(
       ["journal", "conference", "preprint"].filter(function (ty) {
         return SITE.publications.some(function (p) { return p.type === ty; });
@@ -365,13 +336,30 @@
         b.appendChild(meta);
       }
       b.appendChild(el("h3", null, t(p.title)));
-      b.appendChild(el("p", null, t(p.desc)));
 
-      var foot = el("div", "proj-foot");
-      var tg = el("div", "tags");
-      (p.tags || []).forEach(function (x) { tg.appendChild(el("span", "tag", t(x))); });
-      foot.appendChild(tg);
-      b.appendChild(foot);
+      // 导师：有链接就做成外链
+      if (p.mentor && t(p.mentor.name)) {
+        var m = el("p", "proj-mentor");
+        m.appendChild(el("span", "proj-mentor-label", t(UI.mentor)));
+        if (p.mentor.url) {
+          var ma = el("a", "proj-mentor-name", t(p.mentor.name) + " ↗");
+          ma.href = p.mentor.url; ma.target = "_blank"; ma.rel = "noopener";
+          m.appendChild(ma);
+        } else {
+          m.appendChild(el("span", "proj-mentor-name", t(p.mentor.name)));
+        }
+        b.appendChild(m);
+      }
+
+      // 介绍和标签都是可选的
+      if (t(p.desc)) b.appendChild(el("p", null, t(p.desc)));
+      if (p.tags && p.tags.length) {
+        var foot = el("div", "proj-foot");
+        var tg = el("div", "tags");
+        p.tags.forEach(function (x) { tg.appendChild(el("span", "tag", t(x))); });
+        foot.appendChild(tg);
+        b.appendChild(foot);
+      }
 
       // 只有真的有论文时才显示「项目成果」；没有就不放空框子。
       var paper = p.paper || p.link;
@@ -394,8 +382,12 @@
     var g = $("#experienceList");
     g.innerHTML = "";
 
-    // 统一一张表：所有条目字体字号一致，只按年份倒序排列
-    var year = function (x) { return parseInt(String(t(x.when)).match(/\d{4}/) || 0, 10); };
+    // 统一一张表：所有条目字体字号一致，只按年份倒序排列。
+    // 多个年份（如 "2025, 2026"）按最近的一年排。
+    var year = function (x) {
+      var ys = String(t(x.when)).match(/\d{4}/g) || ["0"];
+      return Math.max.apply(null, ys.map(Number));
+    };
     var items = SITE.experience.slice().sort(function (a, b) { return year(b) - year(a); });
 
     items.forEach(function (x, i) {
@@ -429,7 +421,6 @@
     });
   }
 
-  function renderContact() { /* 内容由 data-field / renderHero 处理 */ }
 
   function renderFooter() {
     $("#copyright").textContent = "© " + new Date().getFullYear() + " " + t(SITE.footer.owner);
@@ -455,21 +446,6 @@
   /* ============================================================
      交互
      ============================================================ */
-
-  /* --- 主题 --- */
-  function initTheme() {
-    var saved = localStorage.getItem(THEME_KEY);
-    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setTheme(saved || (prefersDark ? "dark" : "light"));
-
-    $("#themeBtn").addEventListener("click", function () {
-      setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
-    });
-  }
-  function setTheme(mode) {
-    document.documentElement.dataset.theme = mode;
-    localStorage.setItem(THEME_KEY, mode);
-  }
 
   /* --- 语言 --- */
   function initLang() {
@@ -545,7 +521,6 @@
   }
 
   /* ---------- 启动 ---------- */
-  initTheme();
   render();
   initLang();
   initNav();

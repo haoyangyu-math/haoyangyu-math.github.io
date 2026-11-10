@@ -14,30 +14,29 @@ const SITE = {
       zh: "于浩洋，北京大学数学科学学院数学与应用数学专业本科生，研究兴趣为低维拓扑、纽结理论与 Floer 同调。",
       en: "Haoyang Yu is an undergraduate student in Mathematics and Applied Mathematics at Peking University, interested in low-dimensional topology, knot theory, and Floer homology."
     },
-    shortName: { zh: "于浩洋", en: "Haoyang Yu" },
-    eyebrow: {
-      zh: "本科生 · 低维拓扑 · Floer 同调",
-      en: "Undergraduate · Low-dimensional Topology · Floer Homology"
-    },
+    // 左上角标志：TeX 风格的 \mathbb{Y}u，中英文相同。
+    // <span class="bb"> 里的字母用黑板粗体，其余用 TeX 正文字体。
+    brand: '<span class="bb">Y</span>u',
     name: { zh: "于<b>浩洋</b>", en: "Haoyang <b>Yu</b>" },
     role: {
-      zh: "数学与应用数学专业本科生",
-      en: "Undergraduate in Mathematics and Applied Mathematics"
+      zh: "数学与应用数学专业本科生 · 2027 年毕业",
+      en: "Undergraduate in Mathematics and Applied Mathematics · Class of 2027"
     },
     affiliation: {
       zh: "北京大学 数学科学学院",
       en: "School of Mathematical Sciences, Peking University"
     },
+    // 首屏一句话简介；具体方向写在「研究兴趣」栏目里，这里不再展开。
     tagline: {
-      zh: "我的研究兴趣集中在低维拓扑与 Floer 同调，主要学习三维流形、纽结理论、Heegaard Floer 同调与 Monopole Floer 同调，也在探索映射类群与 Floer 理论之间的联系。",
-      en: "My interests center on low-dimensional topology and Floer homology, especially 3-manifolds, knot theory, Heegaard Floer homology, and monopole Floer homology. I am also exploring connections between mapping class groups and Floer theory."
+      zh: "研究兴趣是低维拓扑与 Floer 同调。",
+      en: "I am interested in low-dimensional topology and Floer homology."
     },
-    // 留空则使用内联在 index.html 里的三叶结线描图。
-    // 想换成照片：把图片放进 assets/img/，这里填 "assets/img/me.jpg"。
-    avatar: "",
+    // 首屏照片。换照片时替换 assets/img/me.jpg，并把 ?v= 改成新文件的
+    // SHA-256 前 12 位，访客就不会看到缓存里的旧照片；index.html 里的 <img> 同步改。
+    avatar: "assets/img/me.jpg?v=3a7ee2d0024d",
 
-    // 头像下方的图注。换成真人照片后把这里改成空字符串，图注会自动消失。
-    avatarCaption: { zh: "图 1　三叶结 3₁", en: "fig. 1 — trefoil knot 3₁" },
+    // 照片下方的图注，留空则不显示。
+    avatarCaption: { zh: "", en: "" },
 
     // 邮箱（反爬虫）：拆成三段存放，页面加载时才在浏览器里拼起来。
     // 这样源码和页面文件里都不会出现完整的 "xxx@xxx.com" 字符串，
@@ -46,116 +45,49 @@ const SITE = {
     emailParts: ["yuhymath", "gmail", "com"],
 
     // 公开版学术简历；首屏的「简历 CV」按钮会在新标签页打开它。
-    cv: "assets/files/Haoyang_Yu_CV.pdf?v=814df09ca8cf",
+    cv: "assets/files/Haoyang_Yu_CV.pdf?v=18957e2f6131",
 
     scholar: "",
     links: []
   },
 
   /* ---------------- 二、关于我 ---------------- */
-  about: [
-    {
-      zh: "你好，我是于浩洋。2023 年进入<b>北京大学数学科学学院</b>，主修数学与应用数学，预计于 2027 年毕业。",
-      en: "Hi, I am Haoyang Yu. I entered the <b>School of Mathematical Sciences at Peking University</b> in 2023, majoring in Mathematics and Applied Mathematics, with expected graduation in 2027."
-    },
-    {
-      zh: "我的主要兴趣是<b>低维拓扑与 Floer 同调</b>。目前，我通过“三维流形与 Floer 同调”本科生科研立项和芝加哥大学 Mathematics REU 继续学习相关问题。",
-      en: "My main interests are <b>low-dimensional topology and Floer homology</b>. I am currently pursuing these interests through an undergraduate research project on 3-manifolds and Floer homology and the University of Chicago Mathematics REU."
-    }
-  ],
-
-  facts: [
-    {
-      k: { zh: "身份", en: "Status" },
-      v: { zh: "本科生", en: "Undergraduate Student" },
-      sub: { zh: "北京大学数学科学学院", en: "School of Mathematical Sciences, Peking University" }
-    },
-    {
-      k: { zh: "专业", en: "Major" },
-      v: { zh: "数学与应用数学", en: "Mathematics and Applied Mathematics" },
-      sub: { zh: "2023—2027（预计）", en: "2023—2027 (expected)" }
-    },
-    {
-      k: { zh: "研究兴趣", en: "Interests" },
-      v: { zh: "低维拓扑、Floer 同调", en: "Low-dimensional Topology, Floer Homology" },
-      sub: { zh: "纽结 · 三维流形 · 映射类群", en: "Knots · 3-manifolds · Mapping class groups" }
-    }
-  ],
+  // 身份、专业、毕业年份已在首屏，研究兴趣和经历各有栏目，
+  // 为避免重复，这一栏目前留空（页面自动隐藏）。
+  about: [],
+  facts: [],
 
   /* ---------------- 三、研究兴趣 ---------------- */
-  researchLead: {
-    zh: "我目前的学习和研究主要围绕以下方向展开；其中映射类群与辛 Floer 理论是正在探索的新方向。",
-    en: "My current study and research revolve around the following themes; mapping class groups and symplectic Floer theory are newer directions I am actively exploring."
-  },
+  // 栏目引言，留空则不显示。
+  researchLead: { zh: "", en: "" },
 
   research: [
-    {
-      title: { zh: "低维拓扑与纽结理论", en: "Low-dimensional Topology & Knot Theory" },
-      tags: [
-        { zh: "低维拓扑", en: "Low-dimensional Topology" },
-        { zh: "纽结", en: "Knots" },
-        { zh: "三维流形", en: "3-Manifolds" }
-      ]
-    },
+    { title: { zh: "低维拓扑与纽结理论", en: "Low-dimensional Topology & Knot Theory" } },
     {
       title: {
         zh: "Heegaard Floer 与 Monopole Floer 同调",
         en: "Heegaard Floer & Monopole Floer Homology"
-      },
-      tags: [
-        { zh: "Heegaard Floer", en: "Heegaard Floer" },
-        { zh: "Monopole Floer", en: "Monopole Floer" }
-      ]
-    },
-    {
-      title: { zh: "映射类群与辛 Floer 理论", en: "Mapping Class Groups & Symplectic Floer Theory" },
-      tags: [
-        { zh: "映射类群", en: "Mapping Class Groups" },
-        { zh: "Torelli 群", en: "Torelli Groups" },
-        { zh: "辛 Floer", en: "Symplectic Floer" }
-      ]
+      }
     }
   ],
 
   /* ---------------- 四、项目 ---------------- */
-  // 自己写的程序。links 里的地址相对于主页根目录；
+  // 借助 Claude 生成的程序。links 里的地址相对于主页根目录；
   // 想加新程序，把它的文件夹放进主页目录，再在这里添一条即可。
   worksLead: {
-    zh: "自己写的交互程序，都是零依赖的静态页面，点开就在浏览器里跑。",
-    en: "Interactive programs I wrote, each a dependency-free static page that runs directly in the browser."
+    zh: "借助 Claude 生成的交互程序。",
+    en: "Interactive programs generated with the help of Claude."
   },
 
   works: [
     {
-      when: { zh: "2026", en: "2026" },
-      kind: { zh: "交互式可视化", en: "Interactive Visualization" },
       title: { zh: "纽结同痕可视化", en: "Knot Isotopy Explorer" },
-      desc: {
-        zh: "拖动空间纽结上的任意控制点，程序用 PL 纽结论里的 <b>Δ-move</b> 判定保证形变全程不出现自交，同时实时画出对应的二维投影图解，并识别其间发生的 <b>Reidemeister 移动</b>。每一帧还用 Wirtinger 表示和 Fox 微分重算一次 <b>Alexander 多项式</b>，用来校验形变确实没有改变纽结型。",
-        en: "Drag any control point of a knot in space: a <b>Δ-move</b> test from PL knot theory keeps the deformation embedded at every instant, while the corresponding planar diagram is redrawn live and the <b>Reidemeister moves</b> along the way are identified. Each frame also recomputes the <b>Alexander polynomial</b> from the Wirtinger presentation via Fox calculus, as a check that the deformation has not changed the knot type."
-      },
-      tags: [
-        { zh: "Δ-move", en: "Δ-move" },
-        { zh: "Reidemeister 移动", en: "Reidemeister Moves" },
-        { zh: "Alexander 多项式", en: "Alexander Polynomial" }
-      ],
       links: [
         { label: { zh: "打开演示", en: "Open the demo" }, url: "knot/index.html" }
       ]
     },
     {
-      when: { zh: "2026", en: "2026" },
-      kind: { zh: "交互式可视化", en: "Interactive Visualization" },
       title: { zh: "从投影图还原纽结", en: "Lifting a Knot from Its Diagram" },
-      desc: {
-        zh: "该程序从平面纽结图解构造其三维实现。用户首先将一条平面闭曲线变形为带有横截交点的<b>影子图</b>，并为每个交叉点指定上下穿信息；程序据此构造空间中的一条嵌入折线，使其正交投影与给定图解一致。随后，程序在 Δ-move 条件的约束下对空间折线进行松弛，从而保持纽结型不变。对于交叉点不超过 12 个的影子图，程序还可遍历全部 2ⁿ 种上下穿指派，并依据 <b>Alexander 多项式</b>对所得图解进行分组。",
-        en: "This program constructs a spatial realization of a planar knot diagram. The user first deforms a closed plane curve into a <b>shadow</b> with transverse double points and then assigns over/under information at each crossing. From these data, the program constructs an embedded polygonal curve in three-space whose orthogonal projection agrees with the prescribed diagram. It then relaxes the spatial curve under a Δ-move constraint, preserving the knot type. For shadows with at most 12 crossings, the program can enumerate all 2ⁿ over/under assignments and group the resulting diagrams by their <b>Alexander polynomials</b>."
-      },
-      tags: [
-        { zh: "纽结图解", en: "Knot Diagrams" },
-        { zh: "空间提升", en: "Spatial Lifting" },
-        { zh: "Alexander 多项式", en: "Alexander Polynomial" }
-      ],
       links: [
         { label: { zh: "打开演示", en: "Open the demo" }, url: "knot/lift.html" }
       ]
@@ -167,43 +99,33 @@ const SITE = {
   // status 填 "ongoing" 会在卡片上显示一个「进行中」的呼吸圆点，不需要就删掉这一行。
   projects: [
     {
-      status: "ongoing",
       when: { zh: "2026.06—2026.08", en: "Jun—Aug 2026" },
-      kind: { zh: "Mathematics REU", en: "Mathematics REU" },
       title: { zh: "芝加哥大学 Mathematics REU", en: "University of Chicago Mathematics REU" },
-      desc: {
-        zh: "参加芝加哥大学 2026 Mathematics REU，在暑期开展独立研究并完成结项论文。",
-        en: "Participant in the University of Chicago 2026 Mathematics REU, carrying out independent summer research culminating in a final paper."
+      // 导师；url 留空则只显示名字。
+      mentor: {
+        name: { zh: "Daniel Minahan", en: "Daniel Minahan" },
+        url: "https://math.uchicago.edu/~dminahan/"
       },
-      tags: [
-        { zh: "暑期研究", en: "Summer Research" },
-        { zh: "REU", en: "REU" }
-      ],
-      // 结项论文完成后填这两项，卡片上会自动出现「项目成果」和论文入口。
+      // 结项论文公开后填这两项，卡片上会自动出现「项目成果」和论文入口。
       paper: "",
       paperTitle: { zh: "", en: "" }
     },
     {
-      status: "ongoing",
-      when: { zh: "2025.09—至今", en: "Sep 2025—Present" },
-      kind: { zh: "本科生科研立项", en: "Undergraduate Research Project" },
-      title: { zh: "三维流形与 Floer 同调", en: "3-Manifolds and Floer Homology" },
-      desc: {
-        zh: "在王家军老师指导下开展本科生科研立项，学习 Morse 同调、Heegaard Floer 同调、Monopole Floer 同调与三维流形拓扑。",
-        en: "An undergraduate research project under the guidance of Prof. Jiajun Wang, studying Morse homology, Heegaard Floer homology, monopole Floer homology, and 3-manifold topology."
+      when: { zh: "2025.09—2026.11", en: "Sep 2025—Nov 2026" },
+      title: { zh: "本科生科研立项", en: "Undergraduate Research Project" },
+      mentor: {
+        name: { zh: "王家军 教授", en: "Prof. Jiajun Wang" },
+        url: "https://math.pku.edu.cn/teachers/wangjj/"
       },
-      tags: [
-        { zh: "三维流形", en: "3-Manifolds" },
-        { zh: "Floer 同调", en: "Floer Homology" }
-      ],
       paper: "",
       paperTitle: { zh: "", en: "" }
     }
   ],
 
   /* ---------------- 六、论文与预印本 ---------------- */
-  // 暂无经核实的公开论文，栏目自动隐藏。
+  // 还没有论文时显示 publicationsEmpty 这句话；填了论文就自动换成列表。
   publications: [],
+  publicationsEmpty: { zh: "会有的会有的🥲", en: "It'll come, it'll come 🥲" },
 
   /* ---------------- 七、荣誉与奖项 ---------------- */
   // 按年份倒序自动排列，不需要手动调整顺序。
@@ -216,6 +138,11 @@ const SITE = {
     {
       when: { zh: "2026", en: "2026" },
       what: { zh: "国家奖学金", en: "National Scholarship" },
+      where: { zh: "北京大学", en: "Peking University" }
+    },
+    {
+      when: { zh: "2026", en: "2026" },
+      what: { zh: "九坤数学英才奖学金", en: "Ubiquant Mathematics Talent Scholarship" },
       where: { zh: "北京大学", en: "Peking University" }
     },
     {
@@ -240,7 +167,7 @@ const SITE = {
       where: { zh: "丘成桐大学生数学竞赛", en: "Yau College Student Mathematics Contest" }
     },
     {
-      when: { zh: "2025", en: "2025" },
+      when: { zh: "2025, 2026", en: "2025, 2026" },
       what: { zh: "三好学生", en: "Merit Student" },
       where: { zh: "北京大学", en: "Peking University" }
     },
@@ -255,11 +182,6 @@ const SITE = {
   // 尚未提供可公开访问的文章链接，栏目自动隐藏。
   notes: [],
 
-  /* ---------------- 九、联系 ---------------- */
-  contactLead: {
-    zh: "欢迎就数学学习与研究问题与我交流。",
-    en: "I welcome conversations about learning and research in mathematics."
-  },
 
   footer: {
     owner: { zh: "于浩洋", en: "Haoyang Yu" },
@@ -282,7 +204,6 @@ const UI = {
   navExperience:   { zh: "荣誉与奖项", en: "Honors & Awards" },
   navPublications: { zh: "论文",       en: "Publications" },
   navNotes:        { zh: "随笔",       en: "Notes" },
-  navContact:      { zh: "联系",       en: "Contact" },
 
   secAbout:        { zh: "关于我",       en: "About" },
   secResearch:     { zh: "研究兴趣",     en: "Research Interests" },
@@ -291,16 +212,12 @@ const UI = {
   secExperience:   { zh: "荣誉与奖项",   en: "Honors & Awards" },
   secPublications: { zh: "论文与预印本", en: "Publications" },
   secNotes:        { zh: "随笔",         en: "Notes" },
-  secContact:      { zh: "联系我",       en: "Get in Touch" },
 
   viewResearch:    { zh: "查看研究兴趣", en: "Explore my interests" },
-  contactMe:       { zh: "联系我",       en: "Get in touch" },
   cv:              { zh: "简历 CV",      en: "Curriculum Vitae" },
   fullList:        { zh: "完整列表 →",   en: "Full list →" },
 
   ongoing:         { zh: "进行中",       en: "Ongoing" },
-  copyEmail:       { zh: "复制",         en: "Copy" },
-  copied:          { zh: "已复制",       en: "Copied" },
 
   filterAll:        { zh: "全部",   en: "All" },
   filterJournal:    { zh: "期刊",   en: "Journal" },
@@ -311,6 +228,7 @@ const UI = {
   typeConference:   { zh: "会议",   en: "Conference" },
   typePreprint:     { zh: "预印本", en: "Preprint" },
 
+  mentor:           { zh: "导师", en: "Mentor" },
   projectOutput:    { zh: "项目成果", en: "Project Output" },
   viewPaper:        { zh: "查看论文 ↗", en: "View Paper ↗" },
 
