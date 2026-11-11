@@ -45,7 +45,7 @@ const SITE = {
     emailParts: ["yuhymath", "gmail", "com"],
 
     // 公开版学术简历；首屏的「简历 CV」按钮会在新标签页打开它。
-    cv: "assets/files/Haoyang_Yu_CV.pdf?v=18957e2f6131",
+    cv: "assets/files/Haoyang_Yu_CV.pdf?v=06eb6c1ae8a0",
 
     scholar: "",
     links: []

@@ -42,7 +42,7 @@
 
   /* ---------- 邮箱反爬虫 ----------
      地址在浏览器里才拼起来，源码与页面文件中都不出现完整的 xxx@xxx.com，
-     用正则扫邮箱的爬虫抓不到。 */
+     用正则扫邮箱的爬虫抓不到。页面上显示成 [at] 写法，点击时才拼出 mailto。 */
   function emailAddress() {
     var p = SITE.profile;
     if (p.email) return p.email;                     // 兼容直接写明文的情况
@@ -139,13 +139,20 @@
 
     renderSocials($("#socials"), p.links);
 
-    // 邮箱直接显示在首屏的链接行里
+    // 邮箱显示在首屏的链接行里。页面上写成 "name [at] host"，
+    // mailto 链接只在点击时才生成，渲染后的页面里也没有完整地址。
     var addr = emailAddress();
     var mail = $("#mailLink");
     if (addr) {
-      mail.href = "mailto:" + addr;
-      mail.textContent = addr;
+      mail.textContent = addr.replace(String.fromCharCode(64), " [at] ");
       mail.style.display = "";
+      if (!mail.dataset.bound) {
+        mail.dataset.bound = "1";
+        mail.addEventListener("click", function (e) {
+          e.preventDefault();
+          window.location.href = "mailto:" + emailAddress();
+        });
+      }
     } else {
       mail.style.display = "none";
     }
